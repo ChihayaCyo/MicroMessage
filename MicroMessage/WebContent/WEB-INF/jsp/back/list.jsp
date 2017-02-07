@@ -17,6 +17,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</head>
 	<body style="background: #e1e9eb;">
 		<form action="<%=basePath%>List.action" id="mainForm" method="post">
+			<input type="hidden" name="currentPage" id="currentPage" value="${page.currentPage }" ></input>
+			
 			<div class="right">
 				<div class="current">当前位置：<a href="<%=basePath%>List.action" style="color:#6E6E6E;">内容列表</a> &gt;</div>
 				<div class="rightCont">
@@ -61,26 +63,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 											<%-- <a href="${basePath}AlterList.action?id=${command.id}">修改</a>&nbsp;&nbsp;&nbsp; --%>
 											<%-- <a href="${basePath}DeleteOne.action?id=${command.id}">删除</a> --%>
 											<a href="javascript:alertList('<%=basePath%>','${command.id}');">修改</a>&nbsp;&nbsp;&nbsp;
-											<a href="deleteOne('<%=basePath%>','${command.id}');">删除</a>
+											<a href="javascript:deleteOne('<%=basePath%>','${command.id}');">删除</a>
 										</td>
 									</tr>
-									<script>
+<!-- 								<script>
 									$(document).ready(function getCount(){
 										$("#bCount").text('${status.index+1}');
 									});
-									</script>	
+									</script>	 -->
 								</c:forEach>
 							</tbody>
 						</table>
 						<div class='page fix'>
-							共 <b id="bCount">?</b> 条
-							<a href='###' class='first'>首页</a>
-							<a href='###' class='pre'>上一页</a>
-							当前第<span>1/1</span>页
-							<a href='###' class='next'>下一页</a>
-							<a href='###' class='last'>末页</a>
-							跳至&nbsp;<input type='text' value='1' class='allInput w28' />&nbsp;页&nbsp;
-							<a href='###' class='go'>GO</a>
+							共 <b>${page.totalNumber}</b> 条
+							<c:if test="${page.currentPage!=1 }">
+								<a href="javascript:changeCurrentPage('1')" class='first'>首页</a>
+								<a href="javascript:changeCurrentPage('${page.currentPage-1 }')" class='pre'>上一页</a>
+							</c:if>
+							当前第<span>${page.currentPage }/${page.totalPage}</span>页
+							<c:if test="${page.currentPage!=page.totalPage }">
+								<a href="javascript:changeCurrentPage('${page.currentPage+1}')" class='next'>下一页</a>
+								<a href="javascript:changeCurrentPage('${page.totalPage}')" class='last'>末页</a>
+							</c:if>
+							跳至&nbsp;<input id="currentPageText" type='text' value="${page.currentPage }" class='allInput w28' />&nbsp;页&nbsp;
+							<a href="javascript:changeCurrentPage($('#currentPageText').val())" class='go'>GO</a>
 						</div>
 					</div>
 				</div>
