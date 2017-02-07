@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Command">
+  <resultMap type="com.imooc.bean.Command" id="Command">
+    <id column="c_id" jdbcType="INTEGER" property="id"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="description" jdbcType="VARCHAR" property="description"/>
+    <collection property="contentList" resultMap="CommandContent.Content" />
+  </resultMap>
+  
+  <select id="queryCommandList" parameterType="com.imooc.bean.Command" resultMap="Command">
+    select a.id c_id,a.name,a.description,b.id,b.content,b.command_id
+    from command a left join command_content b
+    on a.id=b.command_id
+    <where>
+        <if test="id != 0">
+	    	and a.id=#{id}
+	    </if>
+    	<if test="name != null and !&quot;&quot;.equals(name.trim())">
+	    	and a.name=#{name}
+	    </if>
+	    <if test="description != null and !&quot;&quot;.equals(description.trim())">
+	    	and a.description like '%' #{description} '%'
+	    </if>
+    </where>
+  </select>
+  
+  <delete id="deleteOne" parameterType="int">
+  	delete from command where id=#{_parameter}
+  </delete>
+  
+  <delete id="deleteBatch" parameterType="java.util.List">
+  	delete from command where id in(
+  		<foreach collection="list" item="item" separator=",">
+  			#{item}
+  		</foreach>
+  	)
+  </delete>  
+  
+  <insert id="addOne" parameterType="com.imooc.bean.Command" useGeneratedKeys="true" keyProperty="id">
+    insert into command(name,description)
+    values(#{name},#{description})
+  </insert>
+<!--   <select id="selectLastId" parameterType="com.imooc.bean.Command" resultMap="Command">
+  	select LAST_INSERT_ID() as c_id
+  </select> -->
+  
+  <update id="alterList" parameterType="com.imooc.bean.Command">
+  	update command set name=#{name},description=#{description}
+  	where id=#{id}
+  </update>
+  
+</mapper>

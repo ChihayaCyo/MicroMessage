@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommandContent">
+
+  <resultMap type="com.imooc.bean.CommandContent" id="Content">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="content" jdbcType="VARCHAR" property="content"/>
+    <result column="command_id" jdbcType="VARCHAR" property="commandId"/>
+  </resultMap>
+  
+  <delete id="deleteOne" parameterType="int">
+  	delete from command_content where command_id=#{_parameter}
+  </delete>
+  
+  <delete id="deleteBatch" parameterType="java.util.List">
+  	delete from command_content where command_id in(
+  		<foreach collection="list" item="item" separator=",">
+  			#{item}
+  		</foreach>
+  	)
+  </delete> 
+  
+  <insert id="addOne" parameterType="com.imooc.bean.CommandContent">
+  	insert into command_content(content,command_id) values(#{content},#{commandId})
+  </insert>
+  
+  <update id="alterList" parameterType="com.imooc.bean.CommandContent">
+  	update command_content set content=#{content}
+  	where command_id=#{commandId}
+  </update>
+  
+</mapper>
