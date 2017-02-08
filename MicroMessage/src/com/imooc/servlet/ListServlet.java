@@ -32,7 +32,7 @@ public class ListServlet extends HttpServlet{
 		}
 		//查询消息列表并传给页面（业务需要去调用service）
 		QueryService listService=new QueryService();
-		req.setAttribute("commandList",listService.queryCommandList(id,name, description,page));
+		req.setAttribute("commandList",listService.queryCommandList(id,name, description,page));//里面count了page
 		//向页面传值
 		req.setAttribute("id", id);
 		req.setAttribute("name", name);

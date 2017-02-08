@@ -31,10 +31,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<td>
 									<input name="description" type="text" class="allInput" value="${description }"/>
 								</td>
-								<td width="90" align="right">内容：</td>
+							</tr>
+							<tr>
+								<td width="90" align="right">内容1：</td>
 								<td>
 									<input name="content" type="text" class="allInput" value="${content }"/>
 								</td>
+							</tr>
+							<tr>
+								<td width="90" align="right">内容2：</td>
+								<td>
+									<input name="content" type="text" class="allInput" value="${content }"/>
+								</td>
+							</tr>
+							<tr>
+								<td width="90" align="right">内容3：</td>
+								<td>
+									<input name="content" type="text" class="allInput" value="${content }"/>
+								</td>
+							</tr>
+							<tr>
 	                            <td width="85" align="right"><input type="submit" class="tabSub" value="新 增" /></td>
 	       					</tr>
 						</tbody>

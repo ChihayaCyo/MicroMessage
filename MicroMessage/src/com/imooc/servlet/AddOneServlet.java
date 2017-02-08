@@ -18,13 +18,10 @@ public class AddOneServlet extends HttpServlet{
 		//接受页面的值
 		String name=req.getParameter("command");
 		String description=req.getParameter("description");
-		String content=req.getParameter("content");
-		//向页面传值
-/*		req.setAttribute("command", name);
-		req.setAttribute("description", description);*/
+		String[] contents=req.getParameterValues("content");
 		//修改数据库（业务需要去调用service）
 		MaintainService maintainService=new MaintainService();
-		maintainService.addOne(name, description,content);
+		maintainService.addOne(name, description,contents);
 		//向页面跳转
 		req.getRequestDispatcher("/WEB-INF/jsp/back/addToList.jsp").forward(req,resp);
 	}

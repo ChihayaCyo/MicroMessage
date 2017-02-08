@@ -11,19 +11,37 @@
     <collection property="contentList" resultMap="CommandContent.Content" />
   </resultMap>
   
-  <select id="queryCommandList" parameterType="java.util.Map" resultMap="Command">
+
+  <select id="queryCommandAll" parameterType="com.imooc.bean.Command" resultMap="Command">
     select a.id c_id,a.name,a.description,b.id,b.content,b.command_id
     from command a left join command_content b
     on a.id=b.command_id
     <where>
+        <if test="id != 0">
+	    	and a.id=#{id}
+	    </if>
+    	<if test="name != null and !&quot;&quot;.equals(name.trim())">
+	    	and a.name=#{name}
+	    </if>
+	    <if test="description != null and !&quot;&quot;.equals(description.trim())">
+	    	and a.description like '%' #{description} '%'
+	    </if>
+    </where>
+    order by c_id
+  </select>
+  
+  <select id="queryCommandList" parameterType="java.util.Map" resultMap="Command">
+    select id c_id,name,description
+    from command
+    <where>
         <if test="command.id != 0">
-	    	and a.id=#{command.id}
+	    	and id=#{command.id}
 	    </if>
     	<if test="command.name != null and !&quot;&quot;.equals(command.name.trim())">
-	    	and a.name=#{command.name}
+	    	and name=#{command.name}
 	    </if>
 	    <if test="command.description != null and !&quot;&quot;.equals(command.description.trim())">
-	    	and a.description like '%' #{command.description} '%'
+	    	and description like '%' #{command.description} '%'
 	    </if>
     </where>
     order by id limit #{page.dbIndex},#{page.dbNumber}
@@ -55,16 +73,16 @@
   </update>
   
   <select id="count" parameterType="com.imooc.bean.Command" resultType="int">
-  	select count(*) from command
+  	select count(*) from command 
     <where>
         <if test="id != 0">
-	    	and a.id=#{id}
+	    	and id=#{id}
 	    </if>
     	<if test="name != null and !&quot;&quot;.equals(name.trim())">
-	    	and a.name=#{name}
+	    	and name=#{name}
 	    </if>
 	    <if test="description != null and !&quot;&quot;.equals(description.trim())">
-	    	and a.description like '%' #{description} '%'
+	    	and description like '%' #{description} '%'
 	    </if>
     </where>
   </select>

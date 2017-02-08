@@ -25,7 +25,7 @@ public class QueryService {
 		command.setDescription(description);
 		CommandDao commandDao=new CommandDao();
 		//根据条件查询条数
-		int totalNumber = commandDao.count(command);
+		int totalNumber = commandDao.count(command);//调用dao->面向接口sql语句
 		//组织分页查询参数
 		page.setTotalNumber(totalNumber);
 		Map<String,Object> parameter=new HashMap<String,Object>();
@@ -33,6 +33,18 @@ public class QueryService {
 		parameter.put("page", page);
 		//分页查询返回结果
 		return commandDao.queryCommandList(parameter);
+	}
+	
+	public List<Command> queryCommandAll(String id,String name,String description){
+		//组织指令对象
+		Command command=new Command();
+		if(id!=null&&!"".equals(id.trim())) 
+			command.setId((Integer.valueOf(id)));
+		command.setName(name);
+		command.setDescription(description);
+		CommandDao commandDao=new CommandDao();
+		//分页查询返回结果
+		return commandDao.queryCommandAll(command);
 	}
 	
 	/**

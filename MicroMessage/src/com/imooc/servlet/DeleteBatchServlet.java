@@ -18,8 +18,10 @@ public class DeleteBatchServlet extends HttpServlet{
 		//接受页面的值
 		String[] ids=req.getParameterValues("id");
 		//批量删除（业务需要去调用service）
-		MaintainService maintainService=new MaintainService();
-		maintainService.deleteBatch(ids);
+		if(ids!=null){
+			MaintainService maintainService=new MaintainService();
+			maintainService.deleteBatch(ids);
+		}
 		//向页面跳转
 		req.getRequestDispatcher("/List.action").forward(req,resp);
 	}

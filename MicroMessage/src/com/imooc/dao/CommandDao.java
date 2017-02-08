@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.imooc.bean.Command;
+import com.imooc.bean.CommandContent;
 import com.imooc.db.DBAccess;
 
 public class CommandDao {
@@ -22,6 +23,24 @@ public class CommandDao {
 			sqlSession=dbAccess.getSqlSession();
 			//通过sqlSession执行SQL语句
 			commandList=sqlSession.selectList("com.imooc.dao.ICommand.queryCommandList",parameter);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			if(sqlSession!=null){
+				sqlSession.close();	
+			}
+		}
+		return commandList;
+	}
+	
+	public List<Command> queryCommandAll(Command command){
+		DBAccess dbAccess=new DBAccess();
+		List<Command> commandList=new ArrayList<Command>();
+		SqlSession sqlSession = null;
+		try {
+			sqlSession=dbAccess.getSqlSession();
+			//通过sqlSession执行SQL语句
+			commandList=sqlSession.selectList("com.imooc.dao.ICommand.queryCommandAll",command);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{
@@ -77,7 +96,7 @@ public class CommandDao {
 	}
 	
 	/**
-	 * 单条新增
+	 * 新增
 	 */
 	public void addOne(Command icommand){
 		DBAccess dbAccess=new DBAccess();
@@ -86,12 +105,15 @@ public class CommandDao {
 			sqlSession=dbAccess.getSqlSession();
 			//通过sqlSession执行SQL语句
 			sqlSession.insert("com.imooc.dao.ICommand.addOne",icommand);
-			sqlSession.commit();
-/*				sqlSession.selectList("Command.selectLastId",icommand);*/
-				int commandId=icommand.getId();
-				icommand.getContentList().get(0).setCommandId(commandId);
-				sqlSession.insert("CommandContent.addOne",icommand.getContentList().get(0));
-				sqlSession.commit();
+			sqlSession.commit();		
+				int commandId=icommand.getId();		
+				int i=0;
+				for(CommandContent content:icommand.getContentList()){
+					icommand.getContentList().get(i).setCommandId(commandId);
+					sqlSession.insert("CommandContent.addOne",content);
+					sqlSession.commit();
+					i++;
+				}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{
@@ -112,11 +134,18 @@ public class CommandDao {
 			//通过sqlSession执行SQL语句
 			sqlSession.update("com.imooc.dao.ICommand.alterList",icommand);
 			sqlSession.commit();
-			/*sqlSession.selectList("Command.selectLastId",icommand);*/
-				int commandId=icommand.getId();
-				icommand.getContentList().get(0).setCommandId(commandId);
-				sqlSession.update("CommandContent.alterList",icommand.getContentList().get(0));
-				sqlSession.commit();
+				int commandId=icommand.getId();			
+				//得到contents所对应的command_content表里的id值
+				List<CommandContent> contentListId=new ArrayList<CommandContent>();
+				contentListId=sqlSession.selectList("CommandContent.queryCommandContentList",commandId);
+				int i=0;
+				for(CommandContent content:icommand.getContentList()){
+					content.setCommandId(commandId);	
+					content.setId(contentListId.get(i).getId());
+					sqlSession.update("CommandContent.alterList",content);
+					sqlSession.commit();
+					i++;
+				}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally{
@@ -127,6 +156,9 @@ public class CommandDao {
 	}
 	
 	
+	/**
+	 * 根据条件查询条数
+	 */
 	public int count(Command command){
 		DBAccess dbAccess=new DBAccess();
 		SqlSession sqlSession=null;

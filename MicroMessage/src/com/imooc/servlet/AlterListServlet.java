@@ -23,26 +23,30 @@ public class AlterListServlet extends HttpServlet{
 		String id=req.getParameter("id");
 		String name=req.getParameter("command");
 		String description=req.getParameter("description");
-		String content=req.getParameter("content");
+		String[] contents=req.getParameterValues("content");
 		//向页面传值
 		req.setAttribute("id", id);
 		req.setAttribute("name", name);
 		req.setAttribute("description", description);
-		req.setAttribute("content", content);
+		req.setAttribute("contents", contents);
 		//查询消息列表并传给页面（业务需要去调用service）
-		if(name==null||description==null||content==null){
+		if(name==null||description==null||contents==null){
 			QueryService listService=new QueryService();
 			List<Command> commandList=new ArrayList<Command>();
-			commandList=listService.queryCommandList(id,name,description);
+			commandList=listService.queryCommandAll(id,name,description);
 			req.setAttribute("id", commandList.get(0).getId());
 			req.setAttribute("name", commandList.get(0).getName());
 			req.setAttribute("description", commandList.get(0).getDescription());
-			req.setAttribute("content", commandList.get(0).getContentList().get(0).getContent());
+			String[] contents2 = new String[commandList.get(0).getContentList().size()];
+			for(int i=0;i<commandList.get(0).getContentList().size();i++){
+				contents2[i]=commandList.get(0).getContentList().get(i).getContent();
+			}
+			req.setAttribute("contents", contents2);
 		}
 		//单条修改（业务需要去调用service）
-		if(name!=null&&!"".equals(name.trim())||description!=null&&!"".equals(description.trim())||content!=null&&!"".equals(content.trim())){
+		if(contents!=null){
 			MaintainService maintainService=new MaintainService();
-			maintainService.alterList(id,name,description,content);
+			maintainService.alterList(id,name,description,contents);
 		}
 		//向页面跳转
 		req.getRequestDispatcher("/WEB-INF/jsp/back/alterList.jsp").forward(req,resp);

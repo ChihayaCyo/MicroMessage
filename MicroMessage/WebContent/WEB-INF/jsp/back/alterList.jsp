@@ -36,12 +36,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<input name="description" type="text" class="allInput" value="${description }"/>
 								</td>
 	       					</tr>
+	       					<c:forEach items="${contents }" var="content" varStatus="status">
 							<tr>
-	       						<td width="90" align="right">内容：</td>
+	       						<td width="90" align="right">内容${status.index+1}：</td>
 								<td>
 									<input name="content" type="text" class="allInput" value="${content }"/>
 								</td>	       					
 	       					</tr>
+	       					</c:forEach>
 	       					<tr>
 	       						<td width="85" align="right"><input type="submit" class="tabSub" value="修 改" /></td>	       					
 	       					</tr>

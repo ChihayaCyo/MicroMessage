@@ -28,7 +28,15 @@
   
   <update id="alterList" parameterType="com.imooc.bean.CommandContent">
   	update command_content set content=#{content}
-  	where command_id=#{commandId}
+  	where id=#{id}
+
   </update>
+  
+  <select id="queryCommandContentList" parameterType="int" resultMap="Content">
+    select id,content,command_id
+    from command_content
+    where command_id=${_parameter}
+    order by id
+  </select>
   
 </mapper>

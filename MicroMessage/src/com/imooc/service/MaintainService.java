@@ -39,17 +39,21 @@ public class MaintainService {
 	/**
 	 * 单条新增
 	 */
-	public void addOne(String name,String description,String content){
+	public void addOne(String name,String description,String[] contents){
 		
-		if((name!=null&&!"".equals(name.trim()))||(description!=null&&!"".equals(description.trim()))||(content!=null&&!"".equals(content.trim()))){
+		if((name!=null&&!"".equals(name.trim()))||(description!=null&&!"".equals(description.trim()))||(contents!=null)){
 			CommandDao commandDao=new CommandDao();
 			Command icommand=new Command();
 			icommand.setName(name);
 			icommand.setDescription(description);
-				List<CommandContent> contentList=new ArrayList<CommandContent>();
-				CommandContent commandContent=new CommandContent();
-				commandContent.setContent(content);
-				contentList.add(0, commandContent);
+				List<CommandContent> contentList=new ArrayList<CommandContent>();	
+				int i=0;
+				for(String content:contents){
+					CommandContent commandContent=new CommandContent();
+					commandContent.setContent(content);
+					contentList.add(i, commandContent);
+					i++;
+				}
 			icommand.setContentList(contentList);
 			commandDao.addOne(icommand);
 		}
@@ -58,16 +62,20 @@ public class MaintainService {
 	/**
 	 * 单条修改
 	 */
-	public void alterList(String id,String name,String description,String content){
+	public void alterList(String id,String name,String description,String[] contents){
 			CommandDao commandDao=new CommandDao();
 			Command icommand = new Command();
 			icommand.setId(Integer.valueOf(id));
 			icommand.setName(name);
 			icommand.setDescription(description);
-				List<CommandContent> contentList=new ArrayList<CommandContent>();
-				CommandContent commandContent=new CommandContent();
-				commandContent.setContent(content);
-				contentList.add(0, commandContent);
+				List<CommandContent> contentList=new ArrayList<CommandContent>();	
+				int i=0;
+				for(String content:contents){
+					CommandContent commandContent=new CommandContent();
+					commandContent.setContent(content);
+					contentList.add(i, commandContent);
+					i++;
+				}
 			icommand.setContentList(contentList);
 			commandDao.alterList(icommand);
 
